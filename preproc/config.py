@@ -1,0 +1,33 @@
+DATA_ROOT_DIR = "/media/soyongs/T9/projects/FBContact"
+RAW_DATA_DIR = f"{DATA_ROOT_DIR}/raw_data"
+EXTRACT_IMAGE_DIR = f"{DATA_ROOT_DIR}/extracted"
+PROC_CALIB_DIR = f"{DATA_ROOT_DIR}/calib"
+PROC_IMAGE_DIR = f"{DATA_ROOT_DIR}/images"
+PROC_JSON_PTH = f"{DATA_ROOT_DIR}/raw_data/sequence_name/proc.json"
+COLMAP_WORKSPACE_DIR = f"{DATA_ROOT_DIR}/calib/sequence_name/workspace"
+RESULTS_DIR = f"{DATA_ROOT_DIR}/inference"
+SAMURAI_WORKING_DIR = "/home/soyongs/Codes/srcs/samurai"
+SAMURAI_RESULTS_DIR = f"{RESULTS_DIR}/samurai"
+SAMURAI_MODEL_CKPT = "/home/soyongs/Data/checkpoints/sam2.1_hiera_base_plus.pt"
+YOLO_RESULTS_DIR = f"{RESULTS_DIR}/yolo"
+YOLO_MODEL_CKPT = "/home/soyongs/Data/checkpoints/yolov8x.pt"
+LANDMARK_WORKING_DIR = "/home/soyongs/Codes/projects/DeepGaitLab_beta"
+VITPOSE_WORKING_DIR = "/home/soyongs/Codes/srcs/ViTPose"
+SMPLIFYX_WORKING_DIR = "/home/soyongs/Codes/projects/DeepGaitLab_beta"
+LANDMARK_RESULTS_DIR = f"{RESULTS_DIR}/dense_vitpose"
+VITPOSE_RESULTS_DIR = f"{RESULTS_DIR}/vitpose"
+SMPLIFYX_RESULTS_DIR = f"{RESULTS_DIR}/smplifyx"
+PROC_CONTACT_DIR = f"{DATA_ROOT_DIR}/contact"
+
+ARIA_CAM_NAME = "aria01"
+SLAM_CAM_NAME = "mobile"
+
+# Check for every sequence
+ARIA_FPS = 30
+GOPRO_FPS = 60
+TARGET_FPS = 30
+
+# Frame-dependent parts
+SEQUENCE_NAME = "11_titus_tepper_01"
+# SEQUENCE_NAME = "09_soyongs_highland-park_02"
+CAMERA_NAMES = ["cam01", "cam02", "cam03", "cam04", "cam05", "cam06"]
