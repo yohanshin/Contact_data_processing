@@ -26,7 +26,7 @@ def run_samurai(model, frames, camera, image_dir, bbox_dir):
         start += 1
     start -= 1
     
-    with open("/home/soyongs/.cache/bbox.txt", "w") as fopen:
+    with open(f"/home/{_C.username}/.cache/bbox.txt", "w") as fopen:
         fopen.write(','.join([str(int(x)) for x in prompt]))
     
     working_dir = _C.SAMURAI_WORKING_DIR
@@ -42,7 +42,7 @@ def run_samurai(model, frames, camera, image_dir, bbox_dir):
             "--model_path", _C.SAMURAI_MODEL_CKPT, 
             "--image_output_dir", results_vis_dir, 
             "--bbox_output_dir", results_bbox_dir, 
-            "--txt_path", "/home/soyongs/.cache/bbox.txt", 
+            "--txt_path", f"/home/{_C.username}/.cache/bbox.txt", 
             "--start", f"{start}", 
             "--end", f"{end}", 
             "--save_to_image"
@@ -80,15 +80,19 @@ def run_yolo(model, frame, camera, image_dir, bbox_dir, save=True):
     cv2.destroyAllWindows()  # Close the window
 
     user_input = input("Target bbox ID: ")
-    
-    bbox_id = int(user_input)
-    if bbox_id <= 0:
-        print(f"User input is wrong! Maybe YOLO fails. Discard this frame!")
-        bbox_pth = os.path.join(bbox_dir, camera, "bbox", f"{frame + 1:05d}.npy")
-        np.save(bbox_pth, np.ones(4) * (-1))
-        return None
+    if len(user_input) == 1:
+        bbox_id = int(user_input)
+        if bbox_id <= 0:
+            print(f"User input is wrong! Maybe YOLO fails. Discard this frame!")
+            bbox_pth = os.path.join(bbox_dir, camera, "bbox", f"{frame + 1:05d}.npy")
+            np.save(bbox_pth, np.ones(4) * (-1))
+            return None
 
-    target_bbox = _bboxes[bbox_id - 1][0]
+        target_bbox = _bboxes[bbox_id - 1][0]
+
+    else:
+        bboxes = [int(i) for i in user_input.split(" ")]
+        target_bbox = np.array(bboxes)
     
     if save:
         bbox_pth = os.path.join(bbox_dir, camera, "bbox", f"{frame + 1:05d}.npy")

@@ -10,7 +10,7 @@ import numpy as np
 from tqdm import tqdm
 
 from preproc import config as _C
-sys.path.append("/home/soyongs/Codes/projects/DeepGaitLab_beta")
+sys.path.append(f"/home/{_C.username}/Codes/projects/DeepGaitLab_beta")
 from lib.models.detector.utils.transform import get_affine_transform
 
 def _xywh2cs(bbox, pixel_std=200, aspect_ratio=192/256, scale_factor=1.1):

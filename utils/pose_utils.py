@@ -1,7 +1,9 @@
 import sys
 import numpy as np
 
-sys.path.append("/home/soyongs/Codes/projects/DeepGaitLab_beta")
+import os
+username = os.getenv("USER")
+sys.path.append(f"/home/{username}/Codes/projects/DeepGaitLab_beta")
 from scripts.fbcontact.utils import (filter_keypoints_2d, 
                                      do_undistortion, 
                                      simple_triangulation, 

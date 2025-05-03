@@ -20,7 +20,7 @@ def visualize_bbox(bboxes, img, color=(0, 255, 0), thickness=2, font_scale=1.0, 
         cv2.rectangle(img_copy, (x1, y1), (x2, y2), color, thickness)
         
         # Prepare the text to display
-        display_text = f"Bbox ID: {bbox_id}"
+        display_text = f"Bbox ID: {bbox_id} | {x1} {y1} {w} {h}"
         
         # Get the size of the text to better position it
         (text_width, text_height), baseline = cv2.getTextSize(
