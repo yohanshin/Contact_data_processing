@@ -34,6 +34,12 @@ def main(args, target_frames=None):
             continue
         bboxes.append(np.stack([np.load(bbox_pth) for bbox_pth in bbox_pth_list]))
 
+    max_len = max([_bbox.shape[0] for _bbox in bboxes])
+    for bbox_i, _bbox in enumerate(bboxes):
+        if _bbox.shape[0] < max_len:
+            _bbox = np.concatenate((_bbox, np.ones((max_len - _bbox.shape[0], 4)) * (-1) ))
+            bboxes[bbox_i] = _bbox.copy()
+    
     bboxes = np.stack(bboxes, axis=1)
     n_frames = bboxes.shape[0]
     results_image_dir = os.path.join(bbox_dir, 'grid_vis')
