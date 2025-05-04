@@ -33,6 +33,9 @@ if __name__ == "__main__":
     os.makedirs(results_dir, exist_ok=True)
     
     for camera in _C.CAMERA_NAMES:
+        if camera not in proc_info["sync_frame"]:
+            continue
+        
         if "valid_init_frames" in proc_info:
             if camera in proc_info["valid_init_frames"]:
                 frame = f"{int(proc_info['valid_init_frames'][camera]):05d}.jpg"
