@@ -56,7 +56,7 @@ def run_yolo(model, frame, camera, image_dir, bbox_dir, save=True):
     image = cv2.imread(image_pth)
     
     bboxes = model.predict(
-        image, device=device, classes=0, conf=0.5, save=False, verbose=False
+        image, device=device, classes=0, conf=0.2, save=False, verbose=False
     )[0].boxes
 
     _bboxes = []
