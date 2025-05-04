@@ -19,6 +19,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--sequence', default='')
+    parser.add_argument('-c', '--camera', default='all')
     args = parser.parse_args()
 
     if args.sequence != '':
@@ -32,6 +33,7 @@ if __name__ == "__main__":
     with open(_C.PROC_JSON_PTH.replace("sequence_name", _C.SEQUENCE_NAME), "rb") as f:
         proc_info = json.load(f)
 
+    camera_list = _C.CAMERA_NAMES if args.camera == "all" else [args.camera]
     for camera in tqdm(_C.CAMERA_NAMES, dynamic_ncols=True):
         if camera not in proc_info["sync_frame"]:
             continue

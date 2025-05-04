@@ -35,3 +35,30 @@ TARGET_FPS = 30
 SEQUENCE_NAME = "11_titus_tepper_01"
 # SEQUENCE_NAME = "09_soyongs_highland-park_02"
 CAMERA_NAMES = ["cam01", "cam02", "cam03", "cam04", "cam05", "cam06"]
+
+SENSOR_NAME_MAPPER = {
+    "LHip": "leftHip", 
+    "RHip": "rightHip", 
+    "LThigh": "leftThigh",
+    "RThigh": "rightThigh",
+    "LKnee": "leftKnee", 
+    "RKnee": "rightKnee", 
+    "LShank": "leftShank",
+    "RShank": "rightShank",
+    "LHeel": "leftFoot",
+    "RHeel": "rightFoot",
+    "LToe": "leftToeBase",
+    "RToe": "rightToeBase",
+    "Back": "lspine",
+    "Spine": "uspine",
+    "LShoulder": "leftShoulder",
+    "RShoulder": "rightShoulder",
+    "LBicep": "leftBicep",
+    "RBicep": "rightBicep",
+    "LElbow": "leftElbow",
+    "RElbow": "rightElbow",
+    "LForearm": "leftForeArm",
+    "RForearm": "rightForeArm",
+    "LHand": "leftHand",
+    "RHand": "rightHand",
+}

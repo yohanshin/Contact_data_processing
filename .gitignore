@@ -3,6 +3,7 @@
 *.avi
 *.jpg
 run.sh
+outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
