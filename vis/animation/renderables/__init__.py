@@ -14,7 +14,7 @@ from aitviewer.renderables.lines import LinesTrail
 
 from vis.utils.rotation import rotation_6d_to_matrix
 
-def addSMPLSequence(model_type, color=[0.65, 0.65, 0.65, 1.0], bm=None, **params):
+def addSMPLSequence(model_type, color=[0.65, 0.65, 0.65, 1.0], bm=None, z_up=True, **params):
     
     body_model_layer = SMPLLayer(model_type=model_type, gender='neutral', device=C.device, num_betas=16)
     if bm is not None:
@@ -24,7 +24,7 @@ def addSMPLSequence(model_type, color=[0.65, 0.65, 0.65, 1.0], bm=None, **params
         smpl_layer=body_model_layer,
         device=C.device,
         color=color,
-        z_up=True,
+        z_up=z_up,
         is_rigged=False,
         show_joint_angles=False,
         **params

@@ -72,6 +72,10 @@ if __name__ == "__main__":
         
         cropped_frame = cv2.resize(frame, (int(frame.shape[1] * 384 / frame.shape[0]), 384))
         image = np.concatenate((cropped_image, cropped_frame), axis=1)
+        if image.shape[0] % 2 == 1:
+            image = image[1:]
+        elif image.shape[1] % 2 == 1:
+            image = image[:, 1:]
         writer.append_data(image[..., ::-1])
 
     writer.close()

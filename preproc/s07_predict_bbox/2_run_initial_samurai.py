@@ -34,7 +34,7 @@ if __name__ == "__main__":
         proc_info = json.load(f)
 
     camera_list = _C.CAMERA_NAMES if args.camera == "all" else [args.camera]
-    for camera in tqdm(_C.CAMERA_NAMES, dynamic_ncols=True):
+    for camera in tqdm(camera_list, dynamic_ncols=True):
         if camera not in proc_info["sync_frame"]:
             continue
 

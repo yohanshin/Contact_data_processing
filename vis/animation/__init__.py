@@ -3,7 +3,7 @@ from aitviewer.viewer import Viewer
 
 
 def render_scene_list(scene_list):
-    v = Viewer()
+    v = Viewer(window_type='glfw')
     v.scene.floor.enabled = True
     v.scene.origin.enabled = False
     v.run_animations = False

@@ -25,6 +25,6 @@ if __name__ == '__main__':
     plt.show()
 
     # check_idxs = [12, 13]
-    # check_idxs = [6, 7, 8, 9]
-    # plt.plot(readings[:, check_idxs])
-    # plt.show()
+    check_idxs = [6, 7, 8, 9]
+    plt.plot(readings[:, check_idxs])
+    plt.show()

@@ -1,15 +1,6 @@
 import sys
 import numpy as np
 
-import os
-username = os.getenv("USER")
-sys.path.append(f"/home/{username}/Codes/projects/DeepGaitLab_beta")
-from scripts.fbcontact.utils import (filter_keypoints_2d, 
-                                     do_undistortion, 
-                                     simple_triangulation, 
-                                     smooth_keypoints,
-                                     do_projection)
-
 
 def _xywh2cs(bbox, pixel_std=200, aspect_ratio=192/256, scale_factor=1.1):
     x1, y1, w, h = bbox

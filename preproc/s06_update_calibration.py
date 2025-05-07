@@ -65,8 +65,25 @@ def read_intrinsics(intrinsic_fname, trg_idxs=[2, 3, 4, 5, 6, 7]):
     
     return Ks[trg_idxs], dists[trg_idxs]
 
-def read_extrinsics(reconstruction, failure_fname):
-    cameras = _C.CAMERA_NAMES
+def get_camera_names(extrinsic_fname):
+    with open(extrinsic_fname) as f:
+        extrinsics = f.readlines()
+        extrinsics = extrinsics[4:] ## drop the first 4 lines
+        extrinsics = extrinsics[::2] ## only alternate lines
+    
+    camera_mapper = dict()
+    for line in extrinsics:
+        line = line.strip().split()
+        camera_id = int(line[-2])
+        image_path = line[-1]
+        camera_name = image_path.split('/')[0]
+
+        camera_mapper[camera_name] = camera_id
+
+    return camera_mapper
+
+
+def read_extrinsics(reconstruction, failure_fname, trg_cameras):
 
     if os.path.exists(failure_fname):
         with open(failure_fname, 'r') as file:
@@ -75,9 +92,10 @@ def read_extrinsics(reconstruction, failure_fname):
         bad_images = []
 
     Es = defaultdict(list)
+    camera_names = []
     for image_id, image in reconstruction.images.items():
         camera = image.name.split('/')[0]
-        if not camera in cameras: continue
+        if not camera in trg_cameras: continue
 
         if image.name in bad_images:
             continue
@@ -85,8 +103,9 @@ def read_extrinsics(reconstruction, failure_fname):
         E = image.projection_matrix()
         E = np.concatenate((E, np.array([0, 0, 0, 1]).reshape(1, 4)), axis=0)
         Es[camera].append(E)
+        camera_names.append(camera)
 
-    _Es = np.zeros((len(cameras), 4, 4))
+    _Es = np.zeros((len(trg_cameras), 4, 4))
     for camera, E in Es.items():
         E = np.stack(E, axis=0)
         rot6d = r.matrix_to_rotation_6d(torch.from_numpy(E[:, :3, :3]))
@@ -97,15 +116,19 @@ def read_extrinsics(reconstruction, failure_fname):
         mean_E = np.eye(4)
         mean_E[:3, :3] = rotmat.copy()
         mean_E[:3, -1] = translation.copy()
-        _Es[_C.CAMERA_NAMES.index(camera)] = mean_E
+        _Es[trg_cameras.index(camera)] = mean_E
 
     return np.stack(_Es)
 
 
-def read_calibration(intrinsic_fname, extrinsic_fname, transform_fname, reconstruction, failure_fname):
-    import pdb; pdb.set_trace()
-    Ks, dists = read_intrinsics(intrinsic_fname)
-    Es = read_extrinsics(reconstruction, failure_fname)
+def read_calibration(intrinsic_fname, extrinsic_fname, transform_fname, reconstruction, failure_fname, exo_cameras):
+    camera_mapper = get_camera_names(extrinsic_fname)
+    min_val = min(camera_mapper.values())
+    trg_camera_idxs = [camera_mapper[camera] - min_val for camera in exo_cameras]
+    
+    Ks, dists = read_intrinsics(intrinsic_fname, trg_camera_idxs)
+    # Ks, dists = read_intrinsics(intrinsic_fname)
+    Es = read_extrinsics(reconstruction, failure_fname, exo_cameras)
     
     T = pickle.load(open(transform_fname, "rb"))["aria01"]
     Es = Es @ T
@@ -122,6 +145,8 @@ if __name__ == "__main__":
 
     if args.sequence != '':
         _C.SEQUENCE_NAME = args.sequence
+    
+    exo_cameras = sorted([f for f in os.listdir(os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "images")) if f.startswith("cam")])
     colmap_dir = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "workspace")
     colmap_reconstruction = pycolmap.Reconstruction(colmap_dir)
 
@@ -131,6 +156,6 @@ if __name__ == "__main__":
     refined_calib_pth = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "calib.npz")
     failure_fname = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "workspace", "bad_images.txt")
     
-    Ks, dists, Rs, Ts = read_calibration(intrinsic_fname, extrinsic_fname, transform_fname, colmap_reconstruction, failure_fname)
+    Ks, dists, Rs, Ts = read_calibration(intrinsic_fname, extrinsic_fname, transform_fname, colmap_reconstruction, failure_fname, exo_cameras)
     np.savez(refined_calib_pth, **dict(Ks=Ks, dists=dists, Rs=Rs, Ts=Ts))
     print("Saved!")

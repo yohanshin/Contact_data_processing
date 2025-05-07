@@ -3,9 +3,6 @@ import os
 import cv2
 import numpy as np
 
-from utils.pose_utils import _xywh2cs
-from vis import get_affine_transform
-
 
 def create_camera_grid(frame_images, frame_number, grid_shape=(2, 3), 
                       cam_names=None, image_size=(256, 192)):
