@@ -1,6 +1,6 @@
 import os
 username = os.getenv("USER")
-ssd_name = "T9" if "soyong" in username else "T91"
+ssd_name = "T9" if "soyong" in username else "T9"
 
 DATA_ROOT_DIR = f"/media/{username}/{ssd_name}/projects/FBContact"
 RAW_DATA_DIR = f"{DATA_ROOT_DIR}/raw_data"

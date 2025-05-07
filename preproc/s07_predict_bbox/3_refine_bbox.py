@@ -56,7 +56,7 @@ def run_yolo(model, frame, camera, image_dir, bbox_dir, save=True):
     image = cv2.imread(image_pth)
     
     bboxes = model.predict(
-        image, device=device, classes=0, conf=0.2, save=False, verbose=False
+        image, device=device, classes=0, conf=0.4, save=False, verbose=False
     )[0].boxes
 
     _bboxes = []
@@ -145,24 +145,30 @@ if __name__ == "__main__":
     for camera, frames in correction_dict["update"].items():
         if len(frames) == 0:
             continue
+        print(f"\n▶️  Processing camera: {camera}")
+
 
         for frame in frames:
             if len(frame.split("-")) == 2:
                 start, end = [int(f) for f in frame.split("-")]
                 frames_to_update = list(range(start, end+1))
+                print(f"  ➤ Updating frame range: {start}–{end} ({len(frames_to_update)} frames)")
                 
                 if end - start > 10:
                     # Run SAMURAI
+                    print(f"  🔁 Running SAMURAI for {camera}, frames {start}–{end}")
                     run_samurai(yolo, frames_to_update, camera, image_dir, bbox_dir)
                     updated_frames += frames_to_update
                     continue
 
             else:
                 frames_to_update = [int(frame)]
+                print(f"  ➤ Updating single frame: {frames_to_update}")
 
             updated_frames += frames_to_update
 
             for frame_to_update in frames_to_update:
+                print(f"    🔍 Running YOLO on {camera}, frame {frame_to_update}")
                 run_yolo(yolo, frame_to_update, camera, image_dir, bbox_dir)
 
     make_video(args, updated_frames)
