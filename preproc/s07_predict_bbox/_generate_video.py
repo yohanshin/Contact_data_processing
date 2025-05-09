@@ -73,8 +73,9 @@ def main(args, target_frames=None):
             frame_image.append(cropped_image)
         
         grid_image = create_camera_grid(frame_image, frame, cam_names=_C.CAMERA_NAMES)
+        
         cv2.imwrite(os.path.join(results_image_dir, f'{frame + 1:05d}.jpg'), grid_image)
-
+        
     image_to_video(results_image_dir, results_video_pth, framerate=60)
 
 

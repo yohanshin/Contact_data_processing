@@ -17,6 +17,7 @@ img_width = 400
 
 # Create a white background image
 padded = np.ones((img_height, img_width, 3), dtype=np.uint8) * 85
+# segment_names = [v for v in _C.SENSOR_NAME_MAPPER]
 segment_names = _C.SENSOR_NAME_LIST
 # Choose layout
 cols = 2

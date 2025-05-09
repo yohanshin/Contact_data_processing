@@ -13,7 +13,7 @@ from ultralytics import YOLO
 from preproc import config as _C
 from utils.subprocess_utils import run_command_with_conda
 from vis.utils.functions import visualize_bbox
-from preproc.s07_predict_bbox.generate_video import main as make_video
+from preproc.s07_predict_bbox._generate_video import main as make_video
 
 def run_samurai(model, frames, camera, image_dir, bbox_dir):
     # Get init bbox from YOLO

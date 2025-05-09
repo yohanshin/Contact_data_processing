@@ -78,7 +78,7 @@ def main(args, target_frames=None):
     if args.sequence != '':
         _C.SEQUENCE_NAME = args.sequence
 
-    USE_ANNOTATED_VIS = True  # 🔁 Toggle this flag to use annotated images
+    USE_ANNOTATED_VIS = False  # 🔁 Toggle this flag to use annotated images
 
     bbox_dir = os.path.join(_C.SAMURAI_RESULTS_DIR, _C.SEQUENCE_NAME)
 
