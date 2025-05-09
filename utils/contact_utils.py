@@ -21,6 +21,7 @@ def parse_arduino_data(filename):
     # This pattern matches "Time: X" and any number of "ChY: Z" patterns
     pattern = r'Time: (\d+)(?:, Ch(\d+): (\d+)){16}'
     
+    n_lines = []
     with open(filename, 'r') as file:
         for line in file:
             line = line.strip()
@@ -51,5 +52,9 @@ def parse_arduino_data(filename):
     # Convert lists to NumPy arrays
     time_array = np.array(times)  # Shape: (N_frames,)
     channel_array = np.array(channels)  # Shape: (N_frames, 16)
+
+    # import matplotlib.pyplot as plt
+    # plt.plot(time_array)
+    # plt.show()
     
     return time_array, channel_array

@@ -3,7 +3,6 @@ import sys
 sys.path.append('./')
 import json
 import argparse
-from collections import defaultdict
 
 import cv2
 import torch

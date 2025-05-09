@@ -24,6 +24,8 @@ VITPOSE_RESULTS_DIR = f"{RESULTS_DIR}/vitpose"
 SMPLIFYX_RESULTS_DIR = f"{RESULTS_DIR}/smplifyx"
 PROC_CONTACT_DIR = f"{DATA_ROOT_DIR}/contact"
 BODY_MODEL_DIR = f"/home/{username}/Data/body_models"
+BENCHMARK_3DHP_RESULT_DIR = f"{DATA_ROOT_DIR}/benchmark/3dhp"
+BENCHMARK_CONTACT_RESULT_DIR = f"{DATA_ROOT_DIR}/benchmark/contact"
 
 ARIA_CAM_NAME = "aria01"
 SLAM_CAM_NAME = "mobile"

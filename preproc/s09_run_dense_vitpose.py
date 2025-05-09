@@ -70,8 +70,8 @@ if __name__ == "__main__":
     os.makedirs(landmark_results_dir, exist_ok=True)
     for camera in tqdm(_C.CAMERA_NAMES, dynamic_ncols=True):
         landmark_results_pth = os.path.join(landmark_results_dir, f"{camera}.npy")
-        # if os.path.exists(landmark_results_pth):
-        #     continue
+        if os.path.exists(landmark_results_pth):
+            continue
 
         working_dir = _C.LANDMARK_WORKING_DIR
         image_dir = os.path.join(_C.PROC_IMAGE_DIR, _C.SEQUENCE_NAME, camera)

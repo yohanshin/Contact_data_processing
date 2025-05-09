@@ -64,6 +64,12 @@ def get_aria_camera_center(aria_dir, camera_name, image_name):
 ##------------------------------------------------
 def process_data(aria_dir, colmap_dir):
     colmap_extrinsics_path = os.path.join(colmap_dir, 'images.txt')
+    failure_fname = os.path.join(colmap_dir, "bad_images.txt")
+    if os.path.exists(failure_fname):
+        with open(failure_fname, 'r') as file:
+            bad_images = file.read().splitlines()
+    else:
+        bad_images = []
 
     with open(colmap_extrinsics_path) as f:
         data = f.readlines()
@@ -91,6 +97,9 @@ def process_data(aria_dir, colmap_dir):
         image_name = image_path.split('/')[1]
 
         if camera_name.startswith('aria'):
+            if os.path.join(camera_name, image_name) in bad_images:
+                continue
+
             qvec = np.asarray([float(element) for element in line[1:5]]) ## QW, QX, QY, QZ
             translation = np.asarray([float(element) for element in line[5:8]]) ## TX, TY, TZ
             rotmat = r.quaternion_to_matrix(torch.from_numpy(qvec)).numpy()

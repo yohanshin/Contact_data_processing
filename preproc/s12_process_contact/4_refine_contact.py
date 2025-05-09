@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append('./')
 
-import json
+import commentjson as json
 import glob
 import argparse
 import numpy as np

@@ -36,7 +36,14 @@ if __name__ == '__main__':
     bboxes = []
     for camera in camera_list:
         bbox_pth_list = sorted(os.listdir(os.path.join(bbox_results_dir, camera, "bbox")))
-        bbox = np.stack([np.load(os.path.join(bbox_results_dir, camera, "bbox", bbox_pth)) for bbox_pth in bbox_pth_list], axis=0)
+        _bboxes = []
+        for bbox_pth in bbox_pth_list:
+            bbox = np.load(os.path.join(bbox_results_dir, camera, "bbox", bbox_pth))
+            if bbox.shape[-1] == 1:
+                bbox = np.ones(4) * -1
+            _bboxes.append(bbox)
+        # bbox = np.stack([np.load(os.path.join(bbox_results_dir, camera, "bbox", bbox_pth)) for bbox_pth in bbox_pth_list], axis=0)
+        bbox = np.stack(_bboxes, axis=0)
         bboxes.append(bbox[:n_frames])
     bboxes = np.stack(bboxes, axis=1)
 
@@ -48,6 +55,7 @@ if __name__ == '__main__':
     grid_video = imageio.get_writer(grid_video_pth, fps=60, mode="I", format="FFMPEG", macro_block_size=None)
     for frame_i, grid_image_pth in tqdm(enumerate(grid_image_pth_list), total=len(grid_image_pth_list), dynamic_ncols=True, leave=False):
         grid_image = cv2.imread(grid_image_pth)
+        if frame_i >= bboxes.shape[0]: break
         
         bbs = bboxes[frame_i].copy()
         rslts = results[frame_i].copy()
@@ -64,7 +72,7 @@ if __name__ == '__main__':
             _result[:, 1] = _result[:, 1] + 40 + row * 256
 
             for joint_i, (xy, color) in enumerate(zip(_result, colors)):
-                if results[frame_i, camera_i, joint_i, 2] < 0.3: 
+                if results[frame_i, camera_i, joint_i, 2] < 0.5: 
                     continue
                 cv2.circle(grid_image, (int(xy[0]), int(xy[1])), color=color, radius=1, thickness=-1)
         

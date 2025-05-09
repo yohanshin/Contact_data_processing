@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append('./')
 import glob
-import json
+import commentjson as json
 import argparse
 import subprocess
 
@@ -47,6 +47,22 @@ if __name__ == "__main__":
     else:
         min_valid_points = 50
     
+    json_pth = os.path.join(_C.SAMURAI_RESULTS_DIR, _C.SEQUENCE_NAME, "bbox_removal.json")
+    if os.path.exists(json_pth):
+        with open(json_pth, "r", encoding="utf-8") as fopen:
+            ignore_dict = json.load(fopen)
+
+        for camera_i, (camera, frames) in enumerate(ignore_dict.items()):
+            for frame in frames:
+                if len(frame.split("-")) == 2:
+                    start, end = [int(f) for f in frame.split("-")]
+                    frames_to_update = list(range(start, end+1))
+
+                else:
+                    frames_to_update = [int(frame)]
+
+                kpts[frames_to_update, camera_i, :, -1] = 0.0
+    
     # Undistort keypoints
     undist_kpts, new_K = do_undistort_fisheye(kpts[..., :2].astype(float), 
                                               calibs['Ks'].astype(float), 
@@ -56,13 +72,13 @@ if __name__ == "__main__":
     calibs["Ks"] = new_K.copy()
     # undist_kpts[:, 1, ..., -1] *= 0.0
     # undist_kpts = do_undistortion(kpts, calibs)
-    
+
     # Filter keypoints
     smoothed_kpts = undist_kpts.copy()
     for c in range(kpts.shape[1]):
         smoothed_kpts[:, c] = smooth_keypoints(undist_kpts[:, c], dim=2, kernel_size=5, kernel_type='gaussian')
 
-    # kpts3d = iterative_triangulation(smoothed_kpts, calibs, bboxes, conf_thr=0.3, reproj_thr=0.03, n_repeat=2, min_valid_points=min_valid_points)
+    # kpts3d = iterative_triangulation(smoothed_kpts, calibs, bboxes, conf_thr=0.3, reproj_thr=0.03, n_repeat=1, min_valid_points=min_valid_points)
     kpts3d = simple_triangulation(smoothed_kpts, calibs, apply_conf=True, conf_thr=0.3, min_valid_points=min_valid_points)
     kpts3d[kpts3d[..., -1] < 0.1] = 0.0
     kpts3d = filter_keypoints_3d(kpts3d, )

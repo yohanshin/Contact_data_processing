@@ -52,10 +52,11 @@ if __name__ == '__main__':
     
     for segm_idx, segm_name in enumerate(proc_info["sensor_names"]):
         thr = int(proc_info["sensor_threshold"][segm_idx])
+        # if segm_name == "LToe": import pdb; pdb.set_trace()
         binary = proc_sensor_readings[:, segm_idx] > thr
         contact_binary[:, target_segment_names.index(segm_name)] = np.logical_or(contact_binary[:, target_segment_names.index(segm_name)], binary)
 
     os.makedirs(os.path.join(_C.PROC_CONTACT_DIR, _C.SEQUENCE_NAME), exist_ok=True)
     np.save(os.path.join(_C.PROC_CONTACT_DIR, _C.SEQUENCE_NAME, "init_contact.npy"), contact_binary)
 
-    get_video(contact_binary)
+    get_video(contact_binary, 0, 1000)
