@@ -13,7 +13,17 @@ from ultralytics import YOLO
 from preproc import config as _C
 from utils.subprocess_utils import run_command_with_conda
 from vis.utils.functions import visualize_bbox
+<<<<<<< HEAD
 from preproc.s07_predict_bbox._generate_video import main as make_video
+||||||| parent of 1d66b1d (update from soyong)
+from preproc.s07_predict_bbox.generate_video import main as make_video
+=======
+
+if os.getevn("USER") == "soyongs":
+    from preproc.s07_predict_bbox._generate_video import main as make_video
+else:
+    from preproc.s07_predict_bbox.generate_video import main as make_video
+>>>>>>> 1d66b1d (update from soyong)
 
 def run_samurai(model, frames, camera, image_dir, bbox_dir):
     # Get init bbox from YOLO
@@ -171,4 +181,4 @@ if __name__ == "__main__":
                 print(f"    🔍 Running YOLO on {camera}, frame {frame_to_update}")
                 run_yolo(yolo, frame_to_update, camera, image_dir, bbox_dir)
 
-    make_video(args, updated_frames)
+    # make_video(args, updated_frames)

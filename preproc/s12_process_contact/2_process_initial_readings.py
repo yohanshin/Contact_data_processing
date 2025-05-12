@@ -59,4 +59,4 @@ if __name__ == '__main__':
     os.makedirs(os.path.join(_C.PROC_CONTACT_DIR, _C.SEQUENCE_NAME), exist_ok=True)
     np.save(os.path.join(_C.PROC_CONTACT_DIR, _C.SEQUENCE_NAME, "init_contact.npy"), contact_binary)
 
-    get_video(contact_binary, 0, 1000)
+    get_video(contact_binary, 0, -1)

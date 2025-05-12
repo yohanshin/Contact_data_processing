@@ -12,7 +12,6 @@ from pytorch3d.renderer import (
     SoftPhongShader,
 )
 from pytorch3d.structures import Meshes
-from pytorch3d.structures.meshes import join_meshes_as_scene
 
 
 def overlay_image_onto_background(image, mask, bbox, background, alpha):
@@ -169,6 +168,33 @@ class Renderer():
         self.cameras = self.create_camera()
         
         
+    def prepare_textures(self, colors, vertices, return_texture=False):
+        if len(vertices.shape) == 2:
+            B = 1
+            squeeze = True
+        else:
+            B = vertices.shape[0]
+            squeeze = False
+
+        if isinstance(colors, list) or isinstance(colors, tuple):
+            if isinstance(colors, tuple): colors = list(colors)
+            if colors[0] > 1: colors = [c / 255. for c in colors]
+            colors = torch.tensor(colors).reshape(1, 1, 3).to(device=vertices.device, dtype=vertices.dtype)
+        
+        if colors.shape[-1] == 4:
+            colors = colors[..., :3]
+        
+        colors = colors.reshape(B, -1, 3)
+        colors = colors.expand(B, vertices.shape[-2], -1)
+
+        if return_texture:
+            return TexturesVertex(verts_features=colors)
+        
+        if squeeze:
+            colors = colors.squeeze(0)
+        return colors
+    
+    
     def update_bbox(self, x3d, scale=2.0, mask=None):
         """ Update bbox of cameras from the given 3d points
 
@@ -200,11 +226,11 @@ class Renderer():
         self.cameras = self.create_camera()
         self.create_renderer()
 
-    def render_mesh(self, vertices, background, verts_features, alpha=1.0):
+    def render_mesh(self, vertices, background, colors=[0.8, 0.8, 0.8], alpha=1.0):
         self.update_bbox(vertices[::50], scale=1.2)
         vertices = vertices.unsqueeze(0)
         
-        verts_features = verts_features.to(device=vertices.device, dtype=vertices.dtype)
+        verts_features = self.prepare_textures(colors, vertices)
         textures = TexturesVertex(verts_features=verts_features)
         
         mesh = Meshes(verts=vertices,

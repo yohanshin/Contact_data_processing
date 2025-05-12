@@ -17,7 +17,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--sequence', default='')
     parser.add_argument('-c', '--camera-idx', default=0, type=int)
-    parser.add_argument('--image-overlay', action='store_true')
     args = parser.parse_args()
 
     if args.sequence != '':

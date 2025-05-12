@@ -7,10 +7,12 @@ import argparse
 from preproc import config as _C
 from utils.subprocess_utils import run_command_with_conda
 
-conda_env = "dgl" if os.getenv("USER") == "soyongs" else "fbcontact"
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--sequence', default='')
+    parser.add_argument('--start', type=int, default=0)
+    parser.add_argument('--end', type=int, default=-1)
     args = parser.parse_args()
 
     if args.sequence != '':
@@ -19,6 +21,7 @@ if __name__ == "__main__":
     with open(_C.PROC_JSON_PTH.replace("sequence_name", _C.SEQUENCE_NAME), "rb") as f:
         proc_info = json.load(f)
 
+    conda_env = "dgl"
     gender = proc_info["gender"]
     bbox_dir = os.path.join(_C.SAMURAI_RESULTS_DIR, _C.SEQUENCE_NAME)
     calib_pth = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "calib.npz")
@@ -32,7 +35,7 @@ if __name__ == "__main__":
     working_dir = _C.SMPLIFYX_WORKING_DIR
     run_cmd = [
         "python", "-u", 
-        "-m", "scripts.fbcontact.run_fitting", 
+        "-m", "scripts.fbcontact.fix_fitting", 
         "--vitpose_results_dir", vitpose_results_dir, 
         "--dense_vitpose_results_dir", dense_vitpose_results_dir, 
         "--calib_path", calib_pth,
@@ -41,6 +44,8 @@ if __name__ == "__main__":
         "--gender", gender,
         "--vitpose_ignore_json_pth", bbox_removal_pth,
         "--large_regularization_json_pth", large_regularization_json_pth,
+        "--start_frame", str(args.start),
+        "--end_frame", str(args.end),
     ]
 
     run_command_with_conda(working_dir, conda_env, run_cmd)

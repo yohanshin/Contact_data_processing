@@ -72,7 +72,7 @@ if __name__ == '__main__':
             _result[:, 1] = _result[:, 1] + 40 + row * 256
 
             for joint_i, (xy, color) in enumerate(zip(_result, colors)):
-                if results[frame_i, camera_i, joint_i, 2] < 0.5: 
+                if results[frame_i, camera_i, joint_i, 2] < 0.3: 
                     continue
                 cv2.circle(grid_image, (int(xy[0]), int(xy[1])), color=color, radius=1, thickness=-1)
         

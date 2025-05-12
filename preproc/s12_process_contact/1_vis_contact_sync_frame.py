@@ -32,7 +32,6 @@ if __name__ == '__main__':
     # check_idxs = [6, 7, 8, 9]
     # check_idxs = [8]
     # check_idxs = [2, 5]
-    # for check_idxs in [6, 7, 8, 9]:
     # for check_idxs in range(16):
     #     plt.plot(readings[:, check_idxs])
     #     plt.show()

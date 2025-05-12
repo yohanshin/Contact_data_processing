@@ -26,7 +26,7 @@ def run_command_with_conda(working_dir, conda_env, cmd):
         return True
 
     except Exception as e:
-        print(f"Exception while running samurai: {e}")
+        print(f"Exception while running code: {e}")
         return False
     finally:
         os.chdir(current_dir)

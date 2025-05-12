@@ -92,6 +92,7 @@ def read_extrinsics(reconstruction, failure_fname, trg_cameras):
         bad_images = []
 
     Es = defaultdict(list)
+    image_ids = defaultdict(list)
     camera_names = []
     for image_id, image in reconstruction.images.items():
         camera = image.name.split('/')[0]
@@ -103,8 +104,10 @@ def read_extrinsics(reconstruction, failure_fname, trg_cameras):
         E = image.projection_matrix()
         E = np.concatenate((E, np.array([0, 0, 0, 1]).reshape(1, 4)), axis=0)
         Es[camera].append(E)
+        image_ids[camera].append(image_id)
         camera_names.append(camera)
 
+    import pdb; pdb.set_trace()
     _Es = np.zeros((len(trg_cameras), 4, 4))
     for camera, E in Es.items():
         E = np.stack(E, axis=0)
@@ -147,14 +150,15 @@ if __name__ == "__main__":
         _C.SEQUENCE_NAME = args.sequence
     
     exo_cameras = sorted([f for f in os.listdir(os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "images")) if f.startswith("cam")])
-    colmap_dir = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "workspace")
+    workspace_fldr = "workspace"
+    colmap_dir = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, workspace_fldr)
     colmap_reconstruction = pycolmap.Reconstruction(colmap_dir)
 
-    intrinsic_fname = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "workspace", "cameras.txt")
-    extrinsic_fname = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "workspace", "images.txt")
-    transform_fname = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "workspace", "colmap_from_aria_transforms.pkl")
+    intrinsic_fname = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, workspace_fldr, "cameras.txt")
+    extrinsic_fname = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, workspace_fldr, "images.txt")
+    transform_fname = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, workspace_fldr, "colmap_from_aria_transforms.pkl")
     refined_calib_pth = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "calib.npz")
-    failure_fname = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, "workspace", "bad_images.txt")
+    failure_fname = os.path.join(_C.PROC_CALIB_DIR, _C.SEQUENCE_NAME, workspace_fldr, "bad_images.txt")
     
     Ks, dists, Rs, Ts = read_calibration(intrinsic_fname, extrinsic_fname, transform_fname, colmap_reconstruction, failure_fname, exo_cameras)
     np.savez(refined_calib_pth, **dict(Ks=Ks, dists=dists, Rs=Rs, Ts=Ts))
